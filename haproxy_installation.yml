@@ -1,0 +1,23 @@
+- hosts: HAProxy
+  vars_files:
+          haproxy_var.yml
+  tasks:
+          - name: Installing HAProxy Software
+            package:
+                    name: haproxy
+                    state: present
+          - name: Configure the Configuration file of haproxy
+            template:
+                    src: haproxy.cfg
+                    dest: /etc/haproxy/haproxy.cfg
+            notify:
+                    - Restart haproxy
+          - name: Start the Service 
+            service:
+                    name: haproxy
+                    state: started
+  handlers:
+          - name: Restart haproxy
+            service:
+                    name: haproxy
+                    state: restarted

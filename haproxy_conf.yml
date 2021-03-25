@@ -1,0 +1,27 @@
+- hosts: webservers
+  vars_files:
+          haproxy_var.yml
+  tasks:
+          - name: Install HTTPD Software
+            package:
+                    name: httpd
+                    state: present
+          - name: Install PHP Software
+            package:
+                    name: php
+                    state: present 
+          - name: Copy the Webpage to the root directory     
+            template:
+                    src: index.php
+                    dest: /var/www/html/index.php
+            notify:   
+            - Restart httpd
+          - name: Start the Service 
+            service:
+                    name: httpd
+                    state: started
+  handlers:  
+          - name: Restart httpd
+            service:
+                    name: httpd
+                    state: restarted 
